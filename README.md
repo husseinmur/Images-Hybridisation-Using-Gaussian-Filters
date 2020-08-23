@@ -7,4 +7,4 @@ The low pass is calculated by convolving the image using the Gaussian Blur Kerne
 
 Convolving images is done by mirroring the kernel up-down and left-right, and then calculating the cross correlation of the image passing the mirrored kernel.
 
-!(messi)[images/leo.png]
+![messi](images/leo.png)
