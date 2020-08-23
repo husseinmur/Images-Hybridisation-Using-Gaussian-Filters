@@ -1,0 +1,199 @@
+<html>
+<head>
+<title>Hybrid Images</title>
+<link href='http://fonts.googleapis.com/css?family=Nunito:300|Crimson+Text|Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" title="Default" href="styles/github.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>  
+
+<link rel="stylesheet" href="highlighting/styles/default.css">
+<script src="highlighting/highlight.pack.js"></script>
+
+<style type="text/css">
+body {
+	margin: 0px;
+	width: 90%;
+	font-family: 'Crimson Text', serif;
+	font-size: 20px;
+	background: #fcfcfc;
+}
+h1 {
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 28px;
+	margin: 25px 0px 0px 0px;
+
+}
+
+h2 {
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 32px;
+	margin: 15px 0px 35px 0px;
+	color: #333;	
+	word-spacing: 3px;
+}
+
+h3 {
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 26px;
+	margin: 10px 0px 10px 0px;
+	color: #333;
+	word-spacing: 2px;
+}
+h4 {
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 22px;
+	margin: 10px 0px 10px 0px;
+	color: #333;
+	word-spacing: 2px;
+}
+
+h5 {
+	font-family: 'Nunito', sans-serif;
+	font-weight: normal;
+	font-size: 18px;
+	margin: 10px 0px 10px 0px;
+	color: #111;
+	word-spacing: 2px;
+}
+
+p, li {
+	color: #444;
+}
+
+a {
+	color: #DE3737;
+}
+
+.container {
+	margin: 0px auto 0px auto;
+	width: 960px;
+}
+
+#header {
+	background: #333;
+	width: 100%;
+}
+
+#headersub {
+	color: #ccc;
+	width: 960px;
+	margin: 0px auto 0px auto;
+	padding: 20px 0px 20px 0px;
+}
+
+.chart {
+	width: 480px;
+}
+.lol {
+	font-size: 16px;
+	color: #888;
+	font-style: italic;
+}
+.sep {
+	height: 1px;
+	width: 100%;
+	background: #999;
+	margin: 20px 0px 20px 0px;
+}
+.footer{
+	font-size: 16px;
+}
+.latex {
+	width: 100%;
+}
+
+.latex img {
+	display: block;
+	margin: 0px auto 0px auto;
+}
+
+pre {
+	font-family: 'Droid Sans Mono';
+	font-size: 14px;
+}
+
+td img {
+  vertical-align: middle;
+}
+
+#contents a {
+}
+</style>
+<script type="text/javascript">
+    hljs.initHighlightingOnLoad();
+</script>
+</head>
+<body>
+<div id="header" >
+<div id="headersub">
+</div>
+</div>
+<div class="container">
+
+<h2> Image Filtering and Hybrid Images</h2>
+
+<div style="float: right; padding: 20px;margin-bottom:20px">
+<p style="font-size: 14px">Hybrid image of Lionel Messi and a lion.</p>
+<img src="images/leo.png" />
+</div>
+<div>
+<p>To get the hybrid image, I added the high pass of one image to the low pass of the other. Multiplying both by some ratio based on Trial and error.</p>
+<p>The low pass is calculated by convolving the image using the Gaussian Blur Kernel. While the high pass is the differnece between the original image and the low pass.</p>
+<p>Convolving images is done by mirroring the kernel up-down and left-right, and then calculating the cross correlation of the image passing the mirrored kernel.</p>
+<p>Cross correaltion is calculated as follows:</p>
+</div>
+<pre><code>
+	def cross_correlation_2d(image, kernel):
+		x, y = kernel.shape
+		a, b = image.shape[0], image.shape[1]
+		out = np.zeros(image.shape)
+		flat_kernel = []
+		for row in kernel:
+			for i in row:
+				flat_kernel.append(i)
+		channels = image.shape[2] if image.ndim == 3 else 1
+		padding_size = (a+x-1,b+y-1,channels)
+		padding = np.zeros(padding_size, dtype=image.dtype)
+		coords = [[x//2,x//2+a],[y//2,y//2+b]]
+		padding[coords[0][0]:coords[0][1], coords[1][0]:coords[1][1]] =
+		 image[:, :, np.newaxis] if channels == 1 else image
+		for i in range(a):
+			for j in range(b):
+			out[i, j] = flat_kernel @ padding[i:i+x, j:j+y].reshape((x*y, channels))
+		return out
+</code></pre>
+
+<h3>Results:</h3>
+
+<table border=1>
+<tr>
+<td>
+<img src="images/11.png" width="33%"/>
+<img src="images/12.png"  width="33%"/>
+<img src="images/13.png" width="33%"/>
+</td>
+</tr>
+
+<tr>
+<td>
+<img src="images/21.png" width="33%"/>
+<img src="images/22.png"  width="33%"/>
+<img src="images/23.png" width="33%"/>
+</td>
+</tr>
+
+
+<tr>
+<td>
+<img src="images/31.png" width="33%"/>
+<img src="images/32.png"  width="33%"/>
+<img src="images/33.png" width="33%"/>
+</td>
+</tr>
+
+</table>
+</body>
+</html>
