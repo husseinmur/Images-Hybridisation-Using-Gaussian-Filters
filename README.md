@@ -1,4 +1,6 @@
 Hybrid Images
+
+
 Filtering images and generating a hybrid out of them
 
 To get the hybrid image, I added the high pass of one image to the low pass of the other. Multiplying both by some ratio based on Trial and error.
